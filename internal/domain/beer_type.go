@@ -13,6 +13,11 @@ const (
 	NonAlcoholic
 )
 
+func NewBeerType(t string) *BeerType {
+	beerType := toID[t]
+	return &beerType
+}
+
 func (t BeerType) String() string {
 	return toString[t]
 }
