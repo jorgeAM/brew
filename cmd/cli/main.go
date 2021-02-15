@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github/com/jorgeAM/brew/internal/cli"
+	"github.com/jorgeAM/brew/internal/cli"
 
 	"github.com/spf13/cobra"
 )
