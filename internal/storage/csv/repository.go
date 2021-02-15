@@ -29,7 +29,6 @@ func (r *repository) GetBeers() ([]domain.Beer, error) {
 		values := strings.Split(string(line), ",")
 
 		id, _ := strconv.Atoi(values[0])
-		price, _ := strconv.ParseFloat(values[3], 64)
 
 		beer := domain.NewBeer(
 			id,
@@ -37,8 +36,8 @@ func (r *repository) GetBeers() ([]domain.Beer, error) {
 			values[2],
 			values[5],
 			values[6],
+			values[3],
 			domain.NewBeerType(values[4]),
-			price,
 		)
 
 		beers = append(beers, beer)

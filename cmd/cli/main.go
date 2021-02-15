@@ -11,9 +11,10 @@ import (
 )
 
 func main() {
-	respository := csv.NewRepository()
+	repository := csv.NewRepository()
+	// repository := otario.NewRepository()
 	rootCmd := &cobra.Command{Use: "beers-cli"}
-	rootCmd.AddCommand(cli.InitBeerCmd(respository))
+	rootCmd.AddCommand(cli.InitBeerCmd(repository))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
