@@ -1,18 +1,16 @@
 package cli
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
-type cobraFn func(cmd *cobra.Command, args []string)
-
-var favoriteBeers = map[string]string{
-	"b1": "7 vidas chocolate",
-	"b2": "The red moon",
-	"b3": "barbarian",
-}
+type cobraFn func(cmd *cobra.Command, args []string) error
 
 func InitBeerCmd() *cobra.Command {
 	beerCmd := &cobra.Command{
@@ -21,7 +19,7 @@ func InitBeerCmd() *cobra.Command {
 		Aliases: []string{
 			"b",
 		},
-		Run: runBeersFn(),
+		RunE: runBeersFn(),
 	}
 
 	beerCmd.Flags().StringP("id", "i", "", "id of beer")
@@ -30,15 +28,39 @@ func InitBeerCmd() *cobra.Command {
 }
 
 func runBeersFn() cobraFn {
-	return func(cmd *cobra.Command, args []string) {
+	return func(cmd *cobra.Command, args []string) error {
 		fmt.Println("beer was call")
+
+		file, err := os.Open("./data/beers.csv")
+
+		if err != nil {
+			return err
+		}
+
+		reader := bufio.NewReader(file)
+
+		var beers = make(map[int]string)
+		for line := readLine(reader); line != nil; line = readLine(reader) {
+			values := strings.Split(string(line), ",")
+
+			productID, _ := strconv.Atoi(values[0])
+			beers[productID] = values[1]
+		}
 
 		id, _ := cmd.Flags().GetString("id")
 
 		if id != "" {
-			fmt.Println(favoriteBeers[id])
+			i, _ := strconv.Atoi(id)
+			fmt.Println(beers[i])
 		} else {
-			fmt.Println(favoriteBeers)
+			fmt.Println(beers)
 		}
+
+		return nil
 	}
+}
+
+func readLine(reader *bufio.Reader) []byte {
+	line, _, _ := reader.ReadLine()
+	return line
 }
