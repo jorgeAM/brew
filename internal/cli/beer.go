@@ -28,7 +28,6 @@ func InitBeerCmd(repository domain.Repository) *cobra.Command {
 
 func runBeersFn(repository domain.Repository) cobraFn {
 	return func(cmd *cobra.Command, args []string) error {
-		fmt.Println("beer was call")
 		beers, err := repository.GetBeers()
 
 		if err != nil {

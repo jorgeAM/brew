@@ -5,7 +5,7 @@ type Beer struct {
 	Name     string    `json:"name"`
 	Price    string    `json:"price"`
 	Category string    `json:"category"`
-	Type     *BeerType `json:"-"`
+	Type     *BeerType `json:"type"`
 	Brewer   string    `json:"brewer"`
 	Country  string    `json:"country"`
 }

@@ -1,5 +1,7 @@
 package domain
 
+import "encoding/json"
+
 type BeerType int
 
 const (
@@ -20,6 +22,20 @@ func NewBeerType(t string) *BeerType {
 
 func (t BeerType) String() string {
 	return toString[t]
+}
+
+func (t *BeerType) UnmarshalJSON(bytes []byte) error {
+	var j string
+
+	err := json.Unmarshal(bytes, &j)
+
+	if err != nil {
+		return err
+	}
+
+	*t = toID[j]
+
+	return nil
 }
 
 var toString = map[BeerType]string{
