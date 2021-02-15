@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github/com/jorgeAM/brew/cli"
 	"os"
+
+	"github/com/jorgeAM/brew/internal/cli"
 
 	"github.com/spf13/cobra"
 )
