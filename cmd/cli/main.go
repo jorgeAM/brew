@@ -7,6 +7,7 @@ import (
 
 	"github.com/jorgeAM/brew/internal/cli"
 	"github.com/jorgeAM/brew/internal/domain"
+	"github.com/jorgeAM/brew/internal/fetching"
 	"github.com/jorgeAM/brew/internal/storage/csv"
 	"github.com/jorgeAM/brew/internal/storage/otario"
 
@@ -16,7 +17,7 @@ import (
 func main() {
 	var repository domain.Repository
 
-	csvData := flag.Bool("csv", false, "use csv repository")
+	csvData := flag.Bool("csv", true, "use csv repository")
 	flag.Parse()
 
 	repository = otario.NewRepository()
@@ -27,8 +28,10 @@ func main() {
 
 	fmt.Println(*csvData)
 
+	service := fetching.NewService(repository)
+
 	rootCmd := &cobra.Command{Use: "beers-cli"}
-	rootCmd.AddCommand(cli.InitBeerCmd(repository))
+	rootCmd.AddCommand(cli.InitBeerCmd(service))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)

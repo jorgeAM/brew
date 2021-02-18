@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/jorgeAM/brew/internal/domain"
+	"github.com/jorgeAM/brew/internal/fetching"
 
 	"github.com/spf13/cobra"
 )
 
 type cobraFn func(cmd *cobra.Command, args []string) error
 
-func InitBeerCmd(repository domain.Repository) *cobra.Command {
+func InitBeerCmd(service fetching.Service) *cobra.Command {
 	beerCmd := &cobra.Command{
 		Use:   "beers",
 		Short: "Print data about beers",
 		Aliases: []string{
 			"b",
 		},
-		RunE: runBeersFn(repository),
+		RunE: runBeersFn(service),
 	}
 
 	beerCmd.Flags().StringP("id", "i", "", "id of beer")
@@ -26,27 +26,35 @@ func InitBeerCmd(repository domain.Repository) *cobra.Command {
 	return beerCmd
 }
 
-func runBeersFn(repository domain.Repository) cobraFn {
+func runBeersFn(service fetching.Service) cobraFn {
 	return func(cmd *cobra.Command, args []string) error {
-		beers, err := repository.GetBeers()
+		id, _ := cmd.Flags().GetString("id")
+
+		if id == "" {
+			beers, err := service.FetchBeers()
+
+			if err != nil {
+				return err
+			}
+
+			fmt.Println(beers)
+
+			return nil
+		}
+
+		i, err := strconv.Atoi(id)
 
 		if err != nil {
 			return err
 		}
 
-		id, _ := cmd.Flags().GetString("id")
+		beer, err := service.FetchByID(i)
 
-		if id != "" {
-			i, _ := strconv.Atoi(id)
-			for _, beer := range beers {
-				if beer.ID == i {
-					fmt.Println(beer)
-					return nil
-				}
-			}
-		} else {
-			fmt.Println(beers)
+		if err != nil {
+			return err
 		}
+
+		fmt.Println(beer)
 
 		return nil
 	}
