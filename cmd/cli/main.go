@@ -15,9 +15,15 @@ import (
 )
 
 func main() {
+	/* Profiling CPU */
+	// f2, _ := os.Create("beers.cpu.prof")
+	// defer f2.Close()
+	// pprof.StartCPUProfile(f2)
+	// defer pprof.StopCPUProfile()
+
 	var repository domain.Repository
 
-	csvData := flag.Bool("csv", true, "use csv repository")
+	csvData := flag.Bool("csv", false, "use csv repository")
 	flag.Parse()
 
 	repository = otario.NewRepository()
@@ -37,4 +43,10 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+
+	/* Profiling memoria */
+	// f2, _ := os.Create("beers.mem.prof")
+	// defer f2.Close()
+	// pprof.WriteHeapProfile(f2)
+
 }
